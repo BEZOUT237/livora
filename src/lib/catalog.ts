@@ -35,16 +35,18 @@ export type BookRow = {
 export const BOOK_SELECT =
   "id,isbn,slug,title,subtitle,book_language,format,pages,published_date,description,why_you_like_it,cover_url,price,compare_at_price,stock_qty,reserved_qty,stock_state,is_demo,is_trending,is_bestseller,is_new_arrival,rating,review_count,units_sold,category_id,created_at,authors(name,slug),publishers(name),categories(slug,name_tr,name_en,name_fr)";
 
-export async function fetchBooks(opts: {
-  search?: string;
-  language?: string;
-  category?: string;
-  sort?: string;
-  maxPrice?: number;
-  minPrice?: number;
-  inStockOnly?: boolean;
-  limit?: number;
-}): Promise<BookRow[]> {
+export type BookQuery = {
+  search?: string | undefined;
+  language?: string | undefined;
+  category?: string | undefined;
+  sort?: string | undefined;
+  maxPrice?: number | undefined;
+  minPrice?: number | undefined;
+  inStockOnly?: boolean | undefined;
+  limit?: number | undefined;
+};
+
+export async function fetchBooks(opts: BookQuery): Promise<BookRow[]> {
   let q = supabase.from("books").select(BOOK_SELECT).eq("is_active", true);
 
   if (opts.search) q = q.or(`title.ilike.%${opts.search}%,isbn.ilike.%${opts.search}%,subtitle.ilike.%${opts.search}%`);
