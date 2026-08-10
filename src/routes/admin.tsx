@@ -4,7 +4,6 @@ import { AlertTriangle, Boxes, PackageSearch, TrendingUp } from "lucide-react";
 import { useRoles, useSession } from "@/lib/session";
 import { supabase } from "@/integrations/supabase/client";
 import { formatTRY, landedCost, marginPct } from "@/lib/format";
-import { BOOK_SELECT } from "@/lib/catalog";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -214,5 +213,3 @@ function AdminPage() {
     </div>
   );
 }
-
-export const BOOK_SELECT_REF = BOOK_SELECT;
