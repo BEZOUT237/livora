@@ -209,6 +209,101 @@ function AdminPage() {
             </table>
           </div>
         </section>
+          </>
+        )}
+
+        {tab === "books" && (
+          <ResourceManager
+            title="Books"
+            description="Full catalogue control: pricing, costs, stock, covers and merchandising flags."
+            table="books"
+            orderBy={{ column: "title" }}
+            columns={bookColumns}
+            fields={bookFields}
+            searchColumns={["title", "isbn", "slug"]}
+          />
+        )}
+        {tab === "authors" && (
+          <div className="space-y-8">
+            <ResourceManager
+              title="Authors"
+              table="authors"
+              orderBy={{ column: "name" }}
+              columns={authorColumns}
+              fields={authorFields}
+              searchColumns={["name", "slug"]}
+            />
+            <ResourceManager
+              title="Publishers"
+              table="publishers"
+              orderBy={{ column: "name" }}
+              columns={publisherColumns}
+              fields={publisherFields}
+              searchColumns={["name", "slug"]}
+            />
+          </div>
+        )}
+        {tab === "suppliers" && (
+          <ResourceManager
+            title="Suppliers"
+            description="Sourcing partners, currencies, lead times and MOQs."
+            table="suppliers"
+            orderBy={{ column: "name" }}
+            columns={supplierColumns}
+            fields={supplierFields}
+            searchColumns={["name", "country", "email"]}
+          />
+        )}
+        {tab === "po" && (
+          <div className="space-y-8">
+            <ResourceManager
+              title="Purchase orders"
+              table="purchase_orders"
+              orderBy={{ column: "created_at", ascending: false }}
+              columns={poColumns}
+              fields={poFields}
+              searchColumns={["po_number", "status"]}
+            />
+            <ResourceManager
+              title="Purchase order lines"
+              table="purchase_order_items"
+              columns={poItemColumns}
+              fields={poItemFields}
+            />
+          </div>
+        )}
+        {tab === "promotions" && (
+          <ResourceManager
+            title="Promotions"
+            description="Discount codes applied at checkout."
+            table="promotions"
+            orderBy={{ column: "created_at", ascending: false }}
+            columns={promoColumns}
+            fields={promoFields}
+            searchColumns={["code", "description"]}
+          />
+        )}
+        {tab === "homepage" && (
+          <div className="space-y-8">
+            <ResourceManager
+              title="Homepage sections"
+              description="Order, rename and toggle the rails shown on the storefront home page."
+              table="homepage_sections"
+              orderBy={{ column: "sort_order" }}
+              columns={sectionColumns}
+              fields={sectionFields}
+              searchColumns={["key", "title_en"]}
+            />
+            <ResourceManager
+              title="Collections"
+              table="collections"
+              orderBy={{ column: "sort_order" }}
+              columns={collectionColumns}
+              fields={collectionFields}
+              searchColumns={["slug", "title_en"]}
+            />
+          </div>
+        )}
       </main>
     </div>
   );
