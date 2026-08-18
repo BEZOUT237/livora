@@ -11,6 +11,7 @@ import { formatDate, formatTRY } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
 import { useCart } from "@/lib/cart";
 import { useSession } from "@/lib/session";
+import { getPublicAssetUrl } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/books/$slug")({
@@ -153,7 +154,7 @@ function BookPage() {
           <div>
             <div className="aspect-[2/3] overflow-hidden rounded-lg bg-ink shadow-book">
               {book.cover_url ? (
-                <img src={book.cover_url} alt={`${book.title} cover`} className="size-full object-cover" />
+                <img src={getPublicAssetUrl(book.cover_url) || book.cover_url} alt={`${book.title} cover`} className="size-full object-cover" />
               ) : (
                 <div className="flex size-full flex-col justify-between p-8 text-ink-foreground">
                   <span className="text-xs font-bold tracking-[0.25em] text-accent">{book.book_language}</span>

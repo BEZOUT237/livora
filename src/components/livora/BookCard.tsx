@@ -2,14 +2,16 @@ import { Link } from "@tanstack/react-router";
 import { Heart } from "lucide-react";
 import { formatTRY } from "@/lib/format";
 import type { BookRow } from "@/lib/catalog";
+import { getPublicAssetUrl } from "@/lib/utils";
 import { StockBadge } from "./StockBadge";
 import { cn } from "@/lib/utils";
 
 function CoverArt({ book }: { book: BookRow }) {
   if (book.cover_url) {
+    const imageUrl = getPublicAssetUrl(book.cover_url);
     return (
       <img
-        src={book.cover_url}
+        src={imageUrl || book.cover_url}
         alt={`${book.title} cover`}
         loading="lazy"
         className="size-full object-cover"

@@ -1,10 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { useI18n } from "@/lib/i18n";
+import { getPublicAssetUrl } from "@/lib/utils";
 import yemelink from "@/assets/yemelink.png.asset.json";
 import algofinance from "@/assets/algo-finance.png.asset.json";
 
 export function Partners() {
   const { t } = useI18n();
+  const yemlinkImageUrl = getPublicAssetUrl(yemelink.url) || yemelink.url;
+  const algoFinanceImageUrl = getPublicAssetUrl(algofinance.url) || algofinance.url;
+  
   return (
     <section className="border-y border-border bg-secondary/50 py-12">
       <div className="container-livora text-center">
@@ -12,7 +16,7 @@ export function Partners() {
         <div className="mt-6 flex flex-wrap items-center justify-center gap-6 sm:gap-12">
           <figure className="flex flex-col items-center gap-2">
             <div className="flex h-20 w-44 items-center justify-center overflow-hidden rounded-lg bg-card p-2 shadow-panel">
-              <img src={yemelink.url} alt="YEMELINK logo" loading="lazy" className="max-h-16 object-contain" />
+              <img src={yemlinkImageUrl} alt="YEMELINK logo" loading="lazy" className="max-h-16 object-contain" />
             </div>
             <figcaption className="text-xs text-muted-foreground">
               Product &amp; technology — Stéphane Yemeli
@@ -20,7 +24,7 @@ export function Partners() {
           </figure>
           <figure className="flex flex-col items-center gap-2">
             <div className="flex h-20 w-44 items-center justify-center overflow-hidden rounded-lg bg-card p-2 shadow-panel">
-              <img src={algofinance.url} alt="Algo Finance logo" loading="lazy" className="max-h-16 object-contain" />
+              <img src={algoFinanceImageUrl} alt="Algo Finance logo" loading="lazy" className="max-h-16 object-contain" />
             </div>
             <figcaption className="text-xs text-muted-foreground">Finance &amp; supply — Nickel Feumo</figcaption>
           </figure>
