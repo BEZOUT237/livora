@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    {
-      "source": "/__l5e/assets-v1/:assetId/:filename",
-      "destination": "https://cdn.lovable.dev/assets/:assetId/:filename"
-    }
-  ]
-}

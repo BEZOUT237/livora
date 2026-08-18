@@ -62,43 +62,43 @@ VALUES
   ('effet-cumule', 'L''Effet Cumulé', 'Décuplez votre réussite !',
    (SELECT id FROM public.authors WHERE slug = 'darren-hardy'),
    (SELECT id FROM public.categories WHERE slug = 'productivity'),
-   'FR', '/__l5e/assets-v1/34bf5c22-3dde-4903-989a-c630bf4bacae/effet-cumule.webp',
+   'FR', '/covers/effet-cumule.webp',
    960, 20, 17.30, 0, 'available_to_order', true, false),
 
   ('secrets-esprit-millionnaire', 'Les Secrets d''un Esprit Millionnaire', NULL,
    (SELECT id FROM public.authors WHERE slug = 't-harv-eker'),
    (SELECT id FROM public.categories WHERE slug = 'finance-money'),
-   'FR', '/__l5e/assets-v1/f52d5c9b-caeb-4933-a05f-b47a8447c424/secrets-esprit-millionnaire.webp',
+   'FR', '/covers/secrets-esprit-millionnaire.webp',
    960, 20, 17.30, 0, 'available_to_order', true, false),
 
   ('osez-reussir', 'Osez réussir !', NULL,
    (SELECT id FROM public.authors WHERE slug = 'osez-reussir-collectif'),
    (SELECT id FROM public.categories WHERE slug = 'personal-development'),
-   'FR', '/__l5e/assets-v1/6f38a5b2-294e-45f9-99e9-c4edee23f1c5/osez-reussir.webp',
+   'FR', '/covers/osez-reussir.webp',
    960, 20, 17.30, 0, 'available_to_order', true, false),
 
   ('plus-malin-que-le-diable', 'Plus malin que le Diable', 'Le secret de la liberté et du succès',
    (SELECT id FROM public.authors WHERE slug = 'napoleon-hill'),
    (SELECT id FROM public.categories WHERE slug = 'personal-development'),
-   'FR', '/__l5e/assets-v1/c526be84-14ac-48bc-b603-cc6c4dabcc5d/plus-malin-que-le-diable.webp',
+   'FR', '/covers/plus-malin-que-le-diable.webp',
    960, 20, 17.30, 0, 'available_to_order', true, false),
 
   ('second-chance', 'Second Chance', 'For Your Money, Your Life and Our World',
    (SELECT id FROM public.authors WHERE slug = 'robert-t-kiyosaki'),
    (SELECT id FROM public.categories WHERE slug = 'finance-money'),
-   'EN', '/__l5e/assets-v1/266a487d-21af-4817-9a99-0463bb54f22e/second-chance.webp',
+   'EN', '/covers/second-chance.webp',
    800, 17, 14.70, 0, 'available_to_order', true, false),
 
   ('the-one-thing', 'The One Thing', 'Passez à l''essentiel',
    (SELECT id FROM public.authors WHERE slug = 'gary-keller-jay-papasan'),
    (SELECT id FROM public.categories WHERE slug = 'productivity'),
-   'FR', '/__l5e/assets-v1/701e03ce-a921-4772-add9-64e32976f265/the-one-thing.webp',
+   'FR', '/covers/the-one-thing.webp',
    1100, 23, 19.99, 0, 'available_to_order', true, false),
 
   ('psychologie-de-l-argent', 'La Psychologie de l''Argent', NULL,
    (SELECT id FROM public.authors WHERE slug = 'morgan-housel'),
    (SELECT id FROM public.categories WHERE slug = 'finance-money'),
-   'FR', '/__l5e/assets-v1/81ae471e-7177-43fe-bd5d-c76b486236c4/psychologie-de-l-argent.webp',
+   'FR', '/covers/psychologie-de-l-argent.webp',
    960, 20, 17.30, 0, 'available_to_order', true, false);
 
 -- 6. Collections -----------------------------------------------------------
