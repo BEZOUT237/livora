@@ -235,10 +235,12 @@ export type Database = {
           is_demo: boolean
           is_new_arrival: boolean
           is_trending: boolean
-          isbn: string
+          isbn: string | null
           packaging_cost: number
           pages: number | null
           price: number
+          price_eur: number | null
+          price_usd: number | null
           published_date: string | null
           publisher_id: string | null
           purchase_cost: number
@@ -278,10 +280,12 @@ export type Database = {
           is_demo?: boolean
           is_new_arrival?: boolean
           is_trending?: boolean
-          isbn: string
+          isbn?: string | null
           packaging_cost?: number
           pages?: number | null
           price?: number
+          price_eur?: number | null
+          price_usd?: number | null
           published_date?: string | null
           publisher_id?: string | null
           purchase_cost?: number
@@ -321,10 +325,12 @@ export type Database = {
           is_demo?: boolean
           is_new_arrival?: boolean
           is_trending?: boolean
-          isbn?: string
+          isbn?: string | null
           packaging_cost?: number
           pages?: number | null
           price?: number
+          price_eur?: number | null
+          price_usd?: number | null
           published_date?: string | null
           publisher_id?: string | null
           purchase_cost?: number
@@ -717,6 +723,7 @@ export type Database = {
           city: string
           coupon_code: string | null
           created_at: string
+          currency: string
           discount_total: number
           district: string
           email: string
@@ -724,8 +731,14 @@ export type Database = {
           id: string
           note: string | null
           order_number: string
+          payment_method: string | null
+          payment_proof_path: string | null
+          payment_proof_uploaded_at: string | null
           payment_provider: string
+          payment_review_note: string | null
           payment_status: string
+          payment_verified_at: string | null
+          payment_verified_by: string | null
           phone: string
           postal_code: string | null
           shipping_carrier: string | null
@@ -745,6 +758,7 @@ export type Database = {
           city: string
           coupon_code?: string | null
           created_at?: string
+          currency?: string
           discount_total?: number
           district: string
           email: string
@@ -752,8 +766,14 @@ export type Database = {
           id?: string
           note?: string | null
           order_number?: string
+          payment_method?: string | null
+          payment_proof_path?: string | null
+          payment_proof_uploaded_at?: string | null
           payment_provider?: string
+          payment_review_note?: string | null
           payment_status?: string
+          payment_verified_at?: string | null
+          payment_verified_by?: string | null
           phone: string
           postal_code?: string | null
           shipping_carrier?: string | null
@@ -773,6 +793,7 @@ export type Database = {
           city?: string
           coupon_code?: string | null
           created_at?: string
+          currency?: string
           discount_total?: number
           district?: string
           email?: string
@@ -780,8 +801,14 @@ export type Database = {
           id?: string
           note?: string | null
           order_number?: string
+          payment_method?: string | null
+          payment_proof_path?: string | null
+          payment_proof_uploaded_at?: string | null
           payment_provider?: string
+          payment_review_note?: string | null
           payment_status?: string
+          payment_verified_at?: string | null
+          payment_verified_by?: string | null
           phone?: string
           postal_code?: string | null
           shipping_carrier?: string | null
