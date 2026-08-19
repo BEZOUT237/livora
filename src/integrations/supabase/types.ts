@@ -220,22 +220,32 @@ export type Database = {
       }
       books: {
         Row: {
+          author_bio: string | null
           author_id: string | null
           book_language: string
           category_id: string | null
           compare_at_price: number | null
+          cover_alt: string | null
           cover_url: string | null
           created_at: string
           customs_cost: number
           description: string | null
+          dimensions: string | null
+          edition: string | null
           format: string
+          gallery: Json
           id: string
           is_active: boolean
           is_bestseller: boolean
+          is_booktok: boolean
           is_demo: boolean
+          is_featured: boolean
           is_new_arrival: boolean
+          is_preorder: boolean
+          is_student_pick: boolean
           is_trending: boolean
           isbn: string | null
+          original_language: string | null
           packaging_cost: number
           pages: number | null
           price: number
@@ -247,40 +257,61 @@ export type Database = {
           purchase_currency: string
           purchase_date: string | null
           purchase_fx_rate: number
+          quotes: string | null
           rating: number
           reorder_threshold: number
           reserved_qty: number
           review_count: number
+          selling_points: string | null
+          seo_description: string | null
+          seo_keywords: string | null
+          seo_title: string | null
           shipping_cost: number
+          short_description: string | null
           sku: string | null
           slug: string
           stock_qty: number
           stock_state: string
           subtitle: string | null
+          summary: string | null
           supplier_id: string | null
+          supplier_sku: string | null
+          tags: string | null
           target_stock: number
+          tax_rate: number
           title: string
           units_sold: number
           updated_at: string
+          weight_grams: number | null
           why_you_like_it: string | null
         }
         Insert: {
+          author_bio?: string | null
           author_id?: string | null
           book_language?: string
           category_id?: string | null
           compare_at_price?: number | null
+          cover_alt?: string | null
           cover_url?: string | null
           created_at?: string
           customs_cost?: number
           description?: string | null
+          dimensions?: string | null
+          edition?: string | null
           format?: string
+          gallery?: Json
           id?: string
           is_active?: boolean
           is_bestseller?: boolean
+          is_booktok?: boolean
           is_demo?: boolean
+          is_featured?: boolean
           is_new_arrival?: boolean
+          is_preorder?: boolean
+          is_student_pick?: boolean
           is_trending?: boolean
           isbn?: string | null
+          original_language?: string | null
           packaging_cost?: number
           pages?: number | null
           price?: number
@@ -292,40 +323,61 @@ export type Database = {
           purchase_currency?: string
           purchase_date?: string | null
           purchase_fx_rate?: number
+          quotes?: string | null
           rating?: number
           reorder_threshold?: number
           reserved_qty?: number
           review_count?: number
+          selling_points?: string | null
+          seo_description?: string | null
+          seo_keywords?: string | null
+          seo_title?: string | null
           shipping_cost?: number
+          short_description?: string | null
           sku?: string | null
           slug: string
           stock_qty?: number
           stock_state?: string
           subtitle?: string | null
+          summary?: string | null
           supplier_id?: string | null
+          supplier_sku?: string | null
+          tags?: string | null
           target_stock?: number
+          tax_rate?: number
           title: string
           units_sold?: number
           updated_at?: string
+          weight_grams?: number | null
           why_you_like_it?: string | null
         }
         Update: {
+          author_bio?: string | null
           author_id?: string | null
           book_language?: string
           category_id?: string | null
           compare_at_price?: number | null
+          cover_alt?: string | null
           cover_url?: string | null
           created_at?: string
           customs_cost?: number
           description?: string | null
+          dimensions?: string | null
+          edition?: string | null
           format?: string
+          gallery?: Json
           id?: string
           is_active?: boolean
           is_bestseller?: boolean
+          is_booktok?: boolean
           is_demo?: boolean
+          is_featured?: boolean
           is_new_arrival?: boolean
+          is_preorder?: boolean
+          is_student_pick?: boolean
           is_trending?: boolean
           isbn?: string | null
+          original_language?: string | null
           packaging_cost?: number
           pages?: number | null
           price?: number
@@ -337,21 +389,32 @@ export type Database = {
           purchase_currency?: string
           purchase_date?: string | null
           purchase_fx_rate?: number
+          quotes?: string | null
           rating?: number
           reorder_threshold?: number
           reserved_qty?: number
           review_count?: number
+          selling_points?: string | null
+          seo_description?: string | null
+          seo_keywords?: string | null
+          seo_title?: string | null
           shipping_cost?: number
+          short_description?: string | null
           sku?: string | null
           slug?: string
           stock_qty?: number
           stock_state?: string
           subtitle?: string | null
+          summary?: string | null
           supplier_id?: string | null
+          supplier_sku?: string | null
+          tags?: string | null
           target_stock?: number
+          tax_rate?: number
           title?: string
           units_sold?: number
           updated_at?: string
+          weight_grams?: number | null
           why_you_like_it?: string | null
         }
         Relationships: [
@@ -388,32 +451,55 @@ export type Database = {
       categories: {
         Row: {
           created_at: string
+          description_en: string | null
+          description_fr: string | null
+          description_tr: string | null
           id: string
+          image_url: string | null
           name_en: string
           name_fr: string
           name_tr: string
+          parent_id: string | null
           slug: string
           sort_order: number
         }
         Insert: {
           created_at?: string
+          description_en?: string | null
+          description_fr?: string | null
+          description_tr?: string | null
           id?: string
+          image_url?: string | null
           name_en: string
           name_fr: string
           name_tr: string
+          parent_id?: string | null
           slug: string
           sort_order?: number
         }
         Update: {
           created_at?: string
+          description_en?: string | null
+          description_fr?: string | null
+          description_tr?: string | null
           id?: string
+          image_url?: string | null
           name_en?: string
           name_fr?: string
           name_tr?: string
+          parent_id?: string | null
           slug?: string
           sort_order?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       collection_books: {
         Row: {
@@ -452,7 +538,11 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          image_url: string | null
           is_active: boolean
+          is_featured: boolean
+          seo_description: string | null
+          seo_title: string | null
           slug: string
           sort_order: number
           subtitle_en: string | null
@@ -465,7 +555,11 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          image_url?: string | null
           is_active?: boolean
+          is_featured?: boolean
+          seo_description?: string | null
+          seo_title?: string | null
           slug: string
           sort_order?: number
           subtitle_en?: string | null
@@ -478,7 +572,11 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          image_url?: string | null
           is_active?: boolean
+          is_featured?: boolean
+          seo_description?: string | null
+          seo_title?: string | null
           slug?: string
           sort_order?: number
           subtitle_en?: string | null
@@ -567,6 +665,9 @@ export type Database = {
           key: string
           kind: string
           sort_order: number
+          subtitle_en: string | null
+          subtitle_fr: string | null
+          subtitle_tr: string | null
           title_en: string
           title_fr: string
           title_tr: string
@@ -578,6 +679,9 @@ export type Database = {
           key: string
           kind?: string
           sort_order?: number
+          subtitle_en?: string | null
+          subtitle_fr?: string | null
+          subtitle_tr?: string | null
           title_en: string
           title_fr: string
           title_tr: string
@@ -589,6 +693,9 @@ export type Database = {
           key?: string
           kind?: string
           sort_order?: number
+          subtitle_en?: string | null
+          subtitle_fr?: string | null
+          subtitle_tr?: string | null
           title_en?: string
           title_fr?: string
           title_tr?: string
@@ -641,6 +748,45 @@ export type Database = {
           },
         ]
       }
+      media_assets: {
+        Row: {
+          alt_text: string | null
+          content_type: string | null
+          created_at: string
+          created_by: string | null
+          file_name: string
+          folder: string
+          id: string
+          size_bytes: number | null
+          storage_path: string | null
+          url: string
+        }
+        Insert: {
+          alt_text?: string | null
+          content_type?: string | null
+          created_at?: string
+          created_by?: string | null
+          file_name: string
+          folder?: string
+          id?: string
+          size_bytes?: number | null
+          storage_path?: string | null
+          url: string
+        }
+        Update: {
+          alt_text?: string | null
+          content_type?: string | null
+          created_at?: string
+          created_by?: string | null
+          file_name?: string
+          folder?: string
+          id?: string
+          size_bytes?: number | null
+          storage_path?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
       newsletter_subscribers: {
         Row: {
           created_at: string
@@ -661,6 +807,41 @@ export type Database = {
           locale?: string
         }
         Relationships: []
+      }
+      order_events: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          note: string | null
+          order_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          order_id: string
+          status: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          order_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_events_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       order_items: {
         Row: {
@@ -729,6 +910,7 @@ export type Database = {
           email: string
           full_name: string
           id: string
+          internal_note: string | null
           note: string | null
           order_number: string
           payment_method: string | null
@@ -764,6 +946,7 @@ export type Database = {
           email: string
           full_name: string
           id?: string
+          internal_note?: string | null
           note?: string | null
           order_number?: string
           payment_method?: string | null
@@ -799,6 +982,7 @@ export type Database = {
           email?: string
           full_name?: string
           id?: string
+          internal_note?: string | null
           note?: string | null
           order_number?: string
           payment_method?: string | null
@@ -1115,6 +1299,42 @@ export type Database = {
           label?: string
           updated_at?: string
           value?: string
+        }
+        Relationships: []
+      }
+      site_content: {
+        Row: {
+          group_name: string
+          key: string
+          kind: string
+          label: string
+          sort_order: number
+          updated_at: string
+          value_en: string
+          value_fr: string
+          value_tr: string
+        }
+        Insert: {
+          group_name?: string
+          key: string
+          kind?: string
+          label: string
+          sort_order?: number
+          updated_at?: string
+          value_en?: string
+          value_fr?: string
+          value_tr?: string
+        }
+        Update: {
+          group_name?: string
+          key?: string
+          kind?: string
+          label?: string
+          sort_order?: number
+          updated_at?: string
+          value_en?: string
+          value_fr?: string
+          value_tr?: string
         }
         Relationships: []
       }
