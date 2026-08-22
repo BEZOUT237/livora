@@ -133,7 +133,6 @@ export const dict: Dict = {
   "auth.name": { tr: "Ad Soyad", en: "Full name", fr: "Nom complet" },
   "auth.phone": { tr: "Telefon", en: "Phone", fr: "Téléphone" },
   "auth.passwordMismatch": { tr: "Şifreler eşleşmiyor.", en: "Passwords do not match.", fr: "Les mots de passe ne correspondent pas." },
-  "auth.confirmationSent": { tr: "Doğrulama bağlantısını e-postanıza gönderdik.", en: "We sent a verification link to your email.", fr: "Nous avons envoyé un lien de vérification à votre adresse e-mail." },
   "auth.signupComplete": { tr: "Hesabınız hazır. Şimdi giriş yapabilirsiniz.", en: "Your account is ready. You can sign in now.", fr: "Votre compte est prêt. Vous pouvez maintenant vous connecter." },
   "auth.welcome": {
     tr: "LIVORA'ya hoş geldiniz, evinizde okumanızı sağlayan uluslararası akıllı kütüphaneniz! SINIRLAR OLMADAN okuyun!",
