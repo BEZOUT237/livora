@@ -24,19 +24,20 @@ export const Route = createFileRoute("/account")({
   component: AccountPage,
 });
 
+const EMAIL_CONFIRMATION_URL = "https://livora-hub.vercel.app/";
+
 function AuthForm() {
   const { t } = useI18n();
   const { currency } = useCurrency();
+  const navigate = useNavigate();
   const [mode, setMode] = useState<"in" | "up">("in");
   const [busy, setBusy] = useState(false);
-  const [welcomeOpen, setWelcomeOpen] = useState(false);
-  const navigate = useNavigate();
   const field = "w-full rounded-md border border-border bg-card px-3 py-2.5 text-sm outline-none focus:border-accent";
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const f = Object.fromEntries(new FormData(e.currentTarget)) as Record<string, string>;
-    if (mode === "up" && f.password !== f.confirm_password) {
+    if (mode === "up" && f["password"] !== f["password_confirmation"]) {
       toast.error(t("auth.passwordMismatch"));
       return;
     }
@@ -47,15 +48,19 @@ function AuthForm() {
         : await supabase.auth.signUp({
             email: f["email"]!,
             password: f["password"]!,
-            options: { data: { full_name: f["full_name"] } },
+            options: { emailRedirectTo: EMAIL_CONFIRMATION_URL, data: { full_name: f["full_name"] } },
           });
     setBusy(false);
     if (res.error) {
       toast.error(res.error.message);
       return;
     }
-    if (mode === "up" && res.data.session) setWelcomeOpen(true);
-    if (mode === "up" && !res.data.session) toast.error(t("auth.confirmationStillEnabled"));
+    if (mode === "up" && !res.data.session) {
+      toast.success(t("auth.confirmationSent"));
+      return;
+    }
+    toast.success(t("auth.welcome"));
+    navigate({ to: "/" });
   };
 
   return (
@@ -65,7 +70,16 @@ function AuthForm() {
         {mode === "up" && <input name="full_name" placeholder={t("auth.name")} className={field} maxLength={120} />}
         <input name="email" type="email" required placeholder={t("auth.email")} className={field} />
         <input name="password" type="password" required minLength={6} placeholder={t("auth.password")} className={field} />
-        {mode === "up" && <input name="confirm_password" type="password" required minLength={6} placeholder={t("auth.confirmPassword")} className={field} />}
+        {mode === "up" && (
+          <input
+            name="password_confirmation"
+            type="password"
+            required
+            minLength={6}
+            placeholder={t("auth.confirmPassword")}
+            className={field}
+          />
+        )}
         <button disabled={busy} className="w-full rounded-md bg-ink py-3 text-sm font-bold text-ink-foreground disabled:opacity-60">
           {mode === "in" ? t("auth.signin") : t("auth.signup")}
         </button>
@@ -73,21 +87,6 @@ function AuthForm() {
       <button onClick={() => setMode(mode === "in" ? "up" : "in")} className="mt-4 text-xs underline">
         {mode === "in" ? t("auth.signup") : t("auth.signin")}
       </button>
-      {welcomeOpen && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-ink/60 p-4" role="dialog" aria-modal="true">
-          <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 text-center shadow-panel">
-            <h2 className="text-2xl">{t("welcome.title")}</h2>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{t("welcome.message")}</p>
-            <button
-              type="button"
-              onClick={() => navigate({ to: "/" })}
-              className="mt-7 rounded-md bg-ink px-5 py-3 text-sm font-bold text-ink-foreground"
-            >
-              {t("welcome.continue")}
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
