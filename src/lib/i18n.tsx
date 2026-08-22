@@ -129,7 +129,21 @@ export const dict: Dict = {
   "auth.signup": { tr: "Kayıt ol", en: "Create account", fr: "Créer un compte" },
   "auth.email": { tr: "E-posta", en: "Email", fr: "E-mail" },
   "auth.password": { tr: "Şifre", en: "Password", fr: "Mot de passe" },
+  "auth.confirmPassword": { tr: "Şifreyi tekrar yazın", en: "Confirm password", fr: "Confirmer le mot de passe" },
+  "auth.passwordMismatch": { tr: "Şifreler eşleşmiyor.", en: "Passwords do not match.", fr: "Les mots de passe ne correspondent pas." },
+  "auth.confirmationStillEnabled": {
+    tr: "Hesap oluşturuldu, ancak Supabase'de e-posta doğrulaması hâlâ etkin.",
+    en: "Your account was created, but email confirmation is still enabled in Supabase.",
+    fr: "Votre compte est créé, mais la confirmation par e-mail est encore activée dans Supabase.",
+  },
   "auth.name": { tr: "Ad Soyad", en: "Full name", fr: "Nom complet" },
+  "welcome.title": { tr: "LIVORA'ya hoş geldiniz", en: "Welcome to LIVORA", fr: "Bienvenue chez LIVORA" },
+  "welcome.message": {
+    tr: "Evde okur gibi okumanızı sağlayan, sınırların olmadığı uluslararası akıllı kütüphaneniz.",
+    en: "Your international smart library, allowing you to read like at home, to read without borders!",
+    fr: "Votre bibliothèque internationale intelligente, pour lire comme chez vous, lire sans frontières !",
+  },
+  "welcome.continue": { tr: "Ana sayfaya git", en: "Go to homepage", fr: "Aller à l'accueil" },
 
   "common.loading": { tr: "Yükleniyor…", en: "Loading…", fr: "Chargement…" },
   "common.save": { tr: "Kaydet", en: "Save", fr: "Enregistrer" },
