@@ -203,6 +203,7 @@ const PURCHASE_ORDER_FIELDS = [
 ];
 
 const CUSTOMER_FIELDS = [
+  { name: "email", label: "Email", type: "text" as const },
   { name: "full_name", label: "Name", type: "text" as const },
   { name: "phone", label: "Phone", type: "text" as const },
   { name: "locale", label: "Locale", type: "select" as const, options: [{ value: "tr", label: "TR" }, { value: "en", label: "EN" }, { value: "fr", label: "FR" }] },

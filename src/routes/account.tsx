@@ -24,13 +24,12 @@ export const Route = createFileRoute("/account")({
   component: AccountPage,
 });
 
-const EMAIL_CONFIRMATION_URL = "https://livora-hub.vercel.app/";
-
 function AuthForm() {
   const { t } = useI18n();
   const { currency } = useCurrency();
   const navigate = useNavigate();
   const [mode, setMode] = useState<"in" | "up">("in");
+  const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const field = "w-full rounded-md border border-border bg-card px-3 py-2.5 text-sm outline-none focus:border-accent";
 
@@ -41,6 +40,7 @@ function AuthForm() {
       toast.error(t("auth.passwordMismatch"));
       return;
     }
+    if (mode === "up" && !f["phone"]?.trim()) return;
     setBusy(true);
     const res =
       mode === "in"
@@ -48,26 +48,30 @@ function AuthForm() {
         : await supabase.auth.signUp({
             email: f["email"]!,
             password: f["password"]!,
-            options: { emailRedirectTo: EMAIL_CONFIRMATION_URL, data: { full_name: f["full_name"] } },
+            options: { data: { full_name: f["full_name"], phone: f["phone"] } },
           });
     setBusy(false);
     if (res.error) {
       toast.error(res.error.message);
       return;
     }
-    if (mode === "up" && !res.data.session) {
-      toast.success(t("auth.confirmationSent"));
+    if (mode === "up") {
+      if (res.data.session) await supabase.auth.signOut();
+      setNotice(t("auth.signupComplete"));
+      setMode("in");
       return;
     }
-    toast.success(t("auth.welcome"));
+    window.sessionStorage.setItem("livora.welcome", "1");
     navigate({ to: "/" });
   };
 
   return (
     <div className="mx-auto max-w-sm py-16">
       <h1 className="text-3xl">{mode === "in" ? t("auth.signin") : t("auth.signup")}</h1>
+      {notice && <p className="mt-4 border border-accent/40 bg-accent/10 p-3 text-sm">{notice}</p>}
       <form onSubmit={submit} className="mt-6 space-y-3">
-        {mode === "up" && <input name="full_name" placeholder={t("auth.name")} className={field} maxLength={120} />}
+        {mode === "up" && <input name="full_name" required placeholder={t("auth.name")} className={field} maxLength={120} />}
+        {mode === "up" && <input name="phone" type="tel" required placeholder={t("auth.phone")} className={field} maxLength={30} />}
         <input name="email" type="email" required placeholder={t("auth.email")} className={field} />
         <input name="password" type="password" required minLength={6} placeholder={t("auth.password")} className={field} />
         {mode === "up" && (

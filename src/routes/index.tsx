@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, BookOpen, ShieldCheck, Sparkles, Truck } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/livora/SiteShell";
 import { BookRail } from "@/components/livora/BookRail";
@@ -179,10 +179,20 @@ function Newsletter() {
 }
 
 function HomePage() {
+  const { t } = useI18n();
+  const [welcome, setWelcome] = useState(false);
   const { data: sections, isLoading } = useQuery({ queryKey: ["homepage-sections"], queryFn: fetchHomepageSections });
+
+  useEffect(() => {
+    if (window.sessionStorage.getItem("livora.welcome") === "1") {
+      window.sessionStorage.removeItem("livora.welcome");
+      setWelcome(true);
+    }
+  }, []);
 
   return (
     <SiteShell>
+      {welcome && <div className="container-livora pt-6"><p className="border border-accent/40 bg-accent/10 p-4 text-center text-sm font-semibold">{t("auth.welcome")}</p></div>}
       <Hero />
       {isLoading && <div className="container-livora py-12 text-sm text-muted-foreground">Loading…</div>}
       {(sections ?? []).map((s) => (
