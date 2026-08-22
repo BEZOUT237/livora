@@ -56,7 +56,11 @@ function AuthForm() {
       return;
     }
     if (mode === "up") {
-      if (res.data.session) await supabase.auth.signOut();
+      if (res.data.session) {
+        window.sessionStorage.setItem("livora.welcome", "1");
+        navigate({ to: "/" });
+        return;
+      }
       setNotice(t("auth.signupComplete"));
       setMode("in");
       return;
