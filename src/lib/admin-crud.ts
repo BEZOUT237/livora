@@ -57,7 +57,7 @@ export function useAdminList(table: AdminTable, select = "*", orderBy?: { column
   });
 }
 
-export function useAdminMutations(table: AdminTable, pk = "id") {
+export function useAdminMutations(table: AdminTable, pk = "id", removeOverride?: (id: string) => Promise<void>) {
   const qc = useQueryClient();
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: ["admin", table] });
@@ -94,6 +94,10 @@ export function useAdminMutations(table: AdminTable, pk = "id") {
 
   const remove = useMutation({
     mutationFn: async (id: string) => {
+      if (removeOverride) {
+        await removeOverride(id);
+        return;
+      }
       const { error } = await supabase.from(table).delete().eq(pk, id);
       if (error) throw error;
     },

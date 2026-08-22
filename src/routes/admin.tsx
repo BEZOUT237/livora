@@ -25,6 +25,7 @@ import { CrudSection } from "@/components/admin/CrudSection";
 import { formatTRY, landedCost, marginPct } from "@/lib/format";
 import { useRoles, useSession } from "@/lib/session";
 import { supabase } from "@/integrations/supabase/client";
+import { deleteAdminUser } from "@/lib/admin-users.functions";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -468,7 +469,7 @@ function AdminPage() {
       case "analytics":
         return <CrudSection table="analytics_events" title="Analytics" description="Traffic, conversion and product trend events." fields={[{ name: "name", label: "Event", type: "text" as const, required: true }, { name: "source", label: "Source", type: "text" as const }, { name: "campaign", label: "Campaign", type: "text" as const }]} select="id,name,source,campaign,created_at" orderBy={{ column: "created_at", ascending: false }} searchKeys={["name", "source", "campaign"]} />;
       case "admins":
-        return <CrudSection table="user_roles" title="Admin Users" description="Role management and access control." fields={[{ name: "user_id", label: "User ID", type: "text" as const, required: true }, { name: "role", label: "Role", type: "select" as const, options: [{ value: "super_admin", label: "Super admin" }, { value: "tech", label: "Tech" }, { value: "finance", label: "Finance" }, { value: "inventory", label: "Inventory" }, { value: "support", label: "Support" }, { value: "marketing", label: "Marketing" }] }]} select="*" orderBy={{ column: "created_at", ascending: false }} searchKeys={["user_id", "role"]} />;
+        return <CrudSection table="profiles" title="Admin Users" description="User accounts, contact details and access control." fields={CUSTOMER_FIELDS} select="*" orderBy={{ column: "created_at", ascending: false }} searchKeys={["email", "full_name", "phone"]} removeOverride={async (id) => { await deleteAdminUser({ data: { userId: id } }); }} />;
       case "activity":
         return <CrudSection table="audit_logs" title="Activity Log" description="Audit trail for changes across the control center." fields={[{ name: "action", label: "Action", type: "text" as const }, { name: "entity", label: "Entity", type: "text" as const }, { name: "entity_id", label: "Entity ID", type: "text" as const }]} select="id,action,entity,entity_id,created_at" orderBy={{ column: "created_at", ascending: false }} searchKeys={["action", "entity", "entity_id"]} />;
       default:

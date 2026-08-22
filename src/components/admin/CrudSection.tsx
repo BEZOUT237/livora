@@ -160,6 +160,7 @@ export function CrudSection({
   searchKeys = [],
   renderCell,
   parentFilter,
+  removeOverride,
 }: {
   table: AdminTable;
   title: string;
@@ -170,9 +171,10 @@ export function CrudSection({
   searchKeys?: string[];
   renderCell?: (row: Row, field: Field) => React.ReactNode;
   parentFilter?: (row: Row) => boolean;
+  removeOverride?: (id: string) => Promise<void>;
 }) {
   const { data, isLoading } = useAdminList(table, select, orderBy);
-  const { create, update, remove } = useAdminMutations(table);
+  const { create, update, remove } = useAdminMutations(table, "id", removeOverride);
   const [editing, setEditing] = useState<Row | null>(null);
   const [creating, setCreating] = useState(false);
   const [q, setQ] = useState("");
