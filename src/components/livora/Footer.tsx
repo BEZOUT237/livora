@@ -2,31 +2,28 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useI18n } from "@/lib/i18n";
 import { DEFAULT_SITE_CONTENT, fetchSiteContent, getSiteValue } from "@/lib/catalog";
-import { getPublicAssetUrl } from "@/lib/utils";
-import yemelink from "@/assets/yemelink.png.asset.json";
-import algofinance from "@/assets/algo-finance.png.asset.json";
+import yemelinkLogo from "../../../yemelink-logo.png";
+import algoFinanceLogo from "../../../algofinance logo.jpg";
 
 export function Partners() {
   const { t } = useI18n();
-  const yemlinkImageUrl = getPublicAssetUrl(yemelink.url) || yemelink.url;
-  const algoFinanceImageUrl = getPublicAssetUrl(algofinance.url) || algofinance.url;
 
   return (
     <section className="border-y border-border bg-secondary/50 py-12">
       <div className="container-livora text-center">
         <p className="eyebrow">{t("partners.title")}</p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-6 sm:gap-12">
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 sm:gap-10">
           <figure className="flex flex-col items-center gap-2">
-            <div className="flex h-20 w-44 items-center justify-center overflow-hidden rounded-lg bg-card p-2 shadow-panel">
-              <img src={yemlinkImageUrl} alt="YEMELINK logo" loading="lazy" className="max-h-16 object-contain" />
+            <div className="flex h-32 w-full max-w-xs items-center justify-center overflow-hidden rounded-lg bg-card p-3 shadow-panel">
+              <img src={yemelinkLogo} alt="YEMELINK logo" loading="lazy" width="1024" height="1024" className="size-full object-contain" />
             </div>
             <figcaption className="text-xs text-muted-foreground">
               Product &amp; technology — Stéphane Yemeli
             </figcaption>
           </figure>
           <figure className="flex flex-col items-center gap-2">
-            <div className="flex h-20 w-44 items-center justify-center overflow-hidden rounded-lg bg-card p-2 shadow-panel">
-              <img src={algoFinanceImageUrl} alt="Algo Finance logo" loading="lazy" className="max-h-16 object-contain" />
+            <div className="flex h-32 w-full max-w-xs items-center justify-center overflow-hidden rounded-lg bg-card p-3 shadow-panel">
+              <img src={algoFinanceLogo} alt="Algo Finance logo" loading="lazy" width="1024" height="1024" className="size-full object-contain" />
             </div>
             <figcaption className="text-xs text-muted-foreground">Finance &amp; supply — Nickel Feumo</figcaption>
           </figure>
@@ -39,9 +36,9 @@ export function Partners() {
 export function Footer() {
   const { t } = useI18n();
   const { data: siteContent } = useQuery({ queryKey: ["site-content"], queryFn: fetchSiteContent });
-  const contactEmail = getSiteValue(siteContent, "contact_email", DEFAULT_SITE_CONTENT.contact_email);
-  const contactAddress = getSiteValue(siteContent, "contact_address", DEFAULT_SITE_CONTENT.contact_address);
-  const footerAbout = getSiteValue(siteContent, "footer_about", DEFAULT_SITE_CONTENT.footer_about);
+  const contactEmail = getSiteValue(siteContent, "contact_email", "yemelink@gmail.com");
+  const contactAddress = getSiteValue(siteContent, "contact_address", "Bolu, Türkiye");
+  const footerAbout = getSiteValue(siteContent, "footer_about", "The smart international bookstore for Türkiye.");
 
   return (
     <footer className="mt-16 bg-ink pb-20 pt-14 text-ink-foreground md:pb-14">
