@@ -115,8 +115,11 @@ export async function fetchSettings(): Promise<Record<string, string>> {
 
 export const DEFAULT_SITE_CONTENT: Record<string, string> = {
   contact_email: "yemelink@gmail.com",
-  contact_phone: "+90 530 000 00 00",
+  contact_phone: "+90 501 024 20 25",
   contact_address: "Bolu, Türkiye",
+  bank_name: "Ziraat Bankası",
+  bank_iban: "TR74 0001 0090 1078 7294 7050 01",
+  bank_account_holder: "NIKEL BIENVENU FEUMO FOLENG",
   footer_about:
     "The smart international bookstore for Türkiye. Curated English & French titles, shipped from Bolu.",
   home_hero_title: "English and French books, intelligently curated.",

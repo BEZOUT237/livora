@@ -1,22 +1,15 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { SiteShell } from "@/components/livora/SiteShell";
 import { useCart } from "@/lib/cart";
 import { useCurrency } from "@/lib/currency";
-import { shippingFor } from "@/lib/catalog";
+import { DEFAULT_SITE_CONTENT, fetchSiteContent, getSiteValue, shippingFor } from "@/lib/catalog";
 import { useI18n } from "@/lib/i18n";
 import { useSession } from "@/lib/session";
 import { supabase } from "@/integrations/supabase/client";
-
-const BANK_DETAILS = {
-  bank: "Ziraat Bankası",
-  iban: "TR12 0000 0000 0000 0000 0000 00",
-  holder: "LIVORA",
-  branch: "Bolu Şubesi",
-  swift: "TRZATRIS",
-};
 
 async function uploadDekont(file: File): Promise<string> {
   const ext = file.name.split(".").pop() ?? "jpg";
@@ -57,6 +50,7 @@ function CheckoutPage() {
   const { t } = useI18n();
   const { data: session } = useSession();
   const { currency, convert, format } = useCurrency();
+  const { data: siteContent } = useQuery({ queryKey: ["site-content"], queryFn: fetchSiteContent });
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState<string | null>(null);
@@ -64,6 +58,12 @@ function CheckoutPage() {
   const [proofUrl, setProofUrl] = useState<string | null>(null);
   const [uploadingProof, setUploadingProof] = useState(false);
   const shipping = shippingFor(subtotal);
+  const bankName = getSiteValue(siteContent, "bank_name", DEFAULT_SITE_CONTENT.bank_name);
+  const bankIban = getSiteValue(siteContent, "bank_iban", DEFAULT_SITE_CONTENT.bank_iban);
+  const bankAccountHolder = getSiteValue(siteContent, "bank_account_holder", DEFAULT_SITE_CONTENT.bank_account_holder);
+  const contactEmail = getSiteValue(siteContent, "contact_email", DEFAULT_SITE_CONTENT.contact_email);
+  const contactPhone = getSiteValue(siteContent, "contact_phone", DEFAULT_SITE_CONTENT.contact_phone);
+  const contactAddress = getSiteValue(siteContent, "contact_address", DEFAULT_SITE_CONTENT.contact_address);
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -153,9 +153,9 @@ function CheckoutPage() {
 
           <fieldset className="space-y-3">
             <legend className="eyebrow mb-2">{t("checkout.contact")}</legend>
-            <input name="full_name" placeholder="Ad Soyad" required maxLength={120} className={field} />
-            <input name="email" type="email" placeholder="E-posta" required defaultValue={session?.user.email ?? ""} className={field} />
-            <input name="phone" placeholder="Telefon" required maxLength={30} className={field} />
+            <input name="full_name" placeholder={t("auth.name")} required maxLength={120} className={field} />
+            <input name="email" type="email" placeholder={t("auth.email")} required defaultValue={session?.user.email ?? contactEmail} className={field} />
+            <input name="phone" placeholder={contactPhone} required maxLength={30} className={field} />
           </fieldset>
 
           <fieldset className="space-y-3">
@@ -172,7 +172,7 @@ function CheckoutPage() {
             <legend className="eyebrow mb-2">{t("checkout.payment")}</legend>
             <div className="rounded-lg border border-border bg-secondary/40 p-4">
               <label className="flex cursor-pointer items-center justify-between gap-3 rounded-md border border-border bg-card px-3 py-3 text-sm">
-                <span className="font-medium">Ziraat Bank Transfer</span>
+                <span className="font-medium">{t("checkout.bankTransfer")}</span>
                 <input
                   type="radio"
                   name="payment_method"
@@ -182,17 +182,17 @@ function CheckoutPage() {
                 />
               </label>
               <div className="mt-4 rounded-md border border-dashed border-border bg-card p-4 text-xs text-muted-foreground">
-                <p className="font-semibold text-foreground">Bank transfer details</p>
+                <p className="font-semibold text-foreground">{t("checkout.bankDetails")}</p>
                 <ul className="mt-3 space-y-1">
-                  <li>Bank: {BANK_DETAILS.bank}</li>
-                  <li>IBAN: {BANK_DETAILS.iban}</li>
-                  <li>Account holder: {BANK_DETAILS.holder}</li>
-                  <li>Branch: {BANK_DETAILS.branch}</li>
+                  <li>{t("checkout.bank")}: {bankName}</li>
+                  <li>{t("checkout.iban")}: {bankIban}</li>
+                  <li>{t("checkout.accountHolder")}: {bankAccountHolder}</li>
+                  <li>{t("checkout.address")}: {contactAddress}</li>
                 </ul>
-                <p className="mt-3">Reference: LIVORA | {session?.user?.email ?? "guest order"}</p>
+                <p className="mt-3">{t("checkout.reference")}: LIVORA | {session?.user?.email ?? contactEmail}</p>
               </div>
               <div className="mt-4 space-y-2">
-                <label className="block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Dekont upload</label>
+                <label className="block text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("checkout.proofUpload")}</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -212,8 +212,8 @@ function CheckoutPage() {
                   }}
                   className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-ink file:px-3 file:py-2 file:text-sm file:font-bold file:text-ink-foreground"
                 />
-                {proofUrl && <p className="text-xs text-success">Proof ready to be reviewed.</p>}
-                {uploadingProof && <p className="text-xs text-muted-foreground">Uploading…</p>}
+                {proofUrl && <p className="text-xs text-success">{t("checkout.proofReady")}</p>}
+                {uploadingProof && <p className="text-xs text-muted-foreground">{t("checkout.proofUploading")}</p>}
               </div>
             </div>
           </fieldset>
