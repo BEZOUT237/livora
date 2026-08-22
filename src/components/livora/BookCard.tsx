@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Heart } from "lucide-react";
-import { formatTRY } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import type { BookRow } from "@/lib/catalog";
 import { getPublicAssetUrl } from "@/lib/utils";
 import { StockBadge } from "./StockBadge";
@@ -28,6 +28,7 @@ function CoverArt({ book }: { book: BookRow }) {
 }
 
 export function BookCard({ book, className }: { book: BookRow; className?: string }) {
+  const { format } = useCurrency();
   return (
     <Link
       to="/books/$slug"
@@ -49,9 +50,9 @@ export function BookCard({ book, className }: { book: BookRow; className?: strin
         <h3 className="font-serif text-[15px] leading-snug line-clamp-2">{book.title}</h3>
         <p className="text-xs text-muted-foreground line-clamp-1">{book.authors?.name ?? "—"}</p>
         <div className="flex items-baseline gap-2">
-          <span className="text-sm font-bold">{formatTRY(book.price)}</span>
+          <span className="text-sm font-bold">{format(book.price)}</span>
           {book.compare_at_price && Number(book.compare_at_price) > Number(book.price) && (
-            <span className="text-xs text-muted-foreground line-through">{formatTRY(book.compare_at_price)}</span>
+            <span className="text-xs text-muted-foreground line-through">{format(book.compare_at_price)}</span>
           )}
         </div>
         <StockBadge state={book.stock_state} />

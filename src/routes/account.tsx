@@ -5,7 +5,8 @@ import { toast } from "sonner";
 import { SiteShell, EmptyState } from "@/components/livora/SiteShell";
 import { useSession, useRoles } from "@/lib/session";
 import { supabase } from "@/integrations/supabase/client";
-import { formatDate, formatTRY } from "@/lib/format";
+import { formatDate } from "@/lib/format";
+import { formatCurrency, useCurrency, type Currency } from "@/lib/currency";
 import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/account")({
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/account")({
 
 function AuthForm() {
   const { t } = useI18n();
+  const { currency } = useCurrency();
   const [mode, setMode] = useState<"in" | "up">("in");
   const [busy, setBusy] = useState(false);
   const field = "w-full rounded-md border border-border bg-card px-3 py-2.5 text-sm outline-none focus:border-accent";
@@ -78,7 +80,7 @@ function AccountPage() {
     queryFn: async () => {
       const { data } = await supabase
         .from("orders")
-        .select("id,order_number,status,total,created_at")
+        .select("id,order_number,status,total,currency,created_at")
         .order("created_at", { ascending: false });
       return data ?? [];
     },
@@ -125,7 +127,7 @@ function AccountPage() {
                     <span className="font-semibold">#{o.order_number}</span>
                     <span className="text-muted-foreground">{formatDate(o.created_at)}</span>
                     <span className="rounded-full bg-secondary px-3 py-1 text-xs">{o.status}</span>
-                    <span className="font-bold">{formatTRY(o.total)}</span>
+                    <span className="font-bold">{formatCurrency(o.total, (o.currency || currency) as Currency)}</span>
                   </li>
                 ))}
               </ul>

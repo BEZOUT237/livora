@@ -4,11 +4,29 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { SiteShell } from "@/components/livora/SiteShell";
 import { useCart } from "@/lib/cart";
-import { formatTRY } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import { shippingFor } from "@/lib/catalog";
 import { useI18n } from "@/lib/i18n";
 import { useSession } from "@/lib/session";
 import { supabase } from "@/integrations/supabase/client";
+
+const BANK_DETAILS = {
+  bank: "Ziraat Bankası",
+  iban: "TR12 0000 0000 0000 0000 0000 00",
+  holder: "LIVORA",
+  branch: "Bolu Şubesi",
+  swift: "TRZATRIS",
+};
+
+async function uploadDekont(file: File): Promise<string> {
+  const ext = file.name.split(".").pop() ?? "jpg";
+  const path = `dekonts/${crypto.randomUUID()}.${ext}`;
+  const { error } = await supabase.storage.from("covers").upload(path, file, { upsert: true });
+  if (error) throw error;
+  const { data, error: signErr } = await supabase.storage.from("covers").createSignedUrl(path, 60 * 60 * 24 * 30);
+  if (signErr || !data) throw signErr ?? new Error("Could not upload payment proof");
+  return data.signedUrl;
+}
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -38,9 +56,13 @@ function CheckoutPage() {
   const { lines, subtotal, clear } = useCart();
   const { t } = useI18n();
   const { data: session } = useSession();
+  const { currency, convert, format } = useCurrency();
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState("ziraat_bank_transfer");
+  const [proofUrl, setProofUrl] = useState<string | null>(null);
+  const [uploadingProof, setUploadingProof] = useState(false);
   const shipping = shippingFor(subtotal);
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -61,11 +83,14 @@ function CheckoutPage() {
         postal_code: parsed.data.postal_code ?? null,
         user_id: session?.user.id ?? null,
         status: "pending_payment",
+        currency,
         payment_provider: "manual",
-        payment_status: "pending",
-        subtotal,
-        shipping_total: shipping,
-        total: subtotal + shipping,
+        payment_method: paymentMethod,
+        payment_status: proofUrl ? "pending_verification" : "pending",
+        payment_proof_path: proofUrl,
+        subtotal: convert(subtotal),
+        shipping_total: convert(shipping),
+        total: convert(subtotal + shipping),
       })
       .select("id,order_number")
       .single();
@@ -82,9 +107,9 @@ function CheckoutPage() {
         book_id: l.bookId,
         title: l.title,
         cover_url: l.coverUrl,
-        unit_price: l.price,
+        unit_price: convert(l.price),
         quantity: l.quantity,
-        line_total: l.price * l.quantity,
+        line_total: convert(l.price * l.quantity),
       })),
     );
 
@@ -143,11 +168,54 @@ function CheckoutPage() {
             <textarea name="address_line" placeholder="Adres" required rows={3} maxLength={400} className={field} />
           </fieldset>
 
-          <fieldset>
+          <fieldset className="space-y-4">
             <legend className="eyebrow mb-2">{t("checkout.payment")}</legend>
-            <p className="rounded-md border border-dashed border-border bg-secondary/60 p-4 text-xs text-muted-foreground">
-              {t("checkout.sandbox")} The payment layer is provider-agnostic and ready for iyzico or PayTR with 3D Secure.
-            </p>
+            <div className="rounded-lg border border-border bg-secondary/40 p-4">
+              <label className="flex cursor-pointer items-center justify-between gap-3 rounded-md border border-border bg-card px-3 py-3 text-sm">
+                <span className="font-medium">Ziraat Bank Transfer</span>
+                <input
+                  type="radio"
+                  name="payment_method"
+                  value="ziraat_bank_transfer"
+                  checked={paymentMethod === "ziraat_bank_transfer"}
+                  onChange={() => setPaymentMethod("ziraat_bank_transfer")}
+                />
+              </label>
+              <div className="mt-4 rounded-md border border-dashed border-border bg-card p-4 text-xs text-muted-foreground">
+                <p className="font-semibold text-foreground">Bank transfer details</p>
+                <ul className="mt-3 space-y-1">
+                  <li>Bank: {BANK_DETAILS.bank}</li>
+                  <li>IBAN: {BANK_DETAILS.iban}</li>
+                  <li>Account holder: {BANK_DETAILS.holder}</li>
+                  <li>Branch: {BANK_DETAILS.branch}</li>
+                </ul>
+                <p className="mt-3">Reference: LIVORA | {session?.user?.email ?? "guest order"}</p>
+              </div>
+              <div className="mt-4 space-y-2">
+                <label className="block text-xs font-semibold uppercase tracking-wide text-muted-foreground">Dekont upload</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (event) => {
+                    const file = event.target.files?.[0];
+                    if (!file) return;
+                    setUploadingProof(true);
+                    try {
+                      const url = await uploadDekont(file);
+                      setProofUrl(url);
+                      toast.success("Payment proof uploaded");
+                    } catch (err) {
+                      toast.error((err as Error).message);
+                    } finally {
+                      setUploadingProof(false);
+                    }
+                  }}
+                  className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-ink file:px-3 file:py-2 file:text-sm file:font-bold file:text-ink-foreground"
+                />
+                {proofUrl && <p className="text-xs text-success">Proof ready to be reviewed.</p>}
+                {uploadingProof && <p className="text-xs text-muted-foreground">Uploading…</p>}
+              </div>
+            </div>
           </fieldset>
 
           <button
@@ -166,22 +234,22 @@ function CheckoutPage() {
                 <span className="line-clamp-2">
                   {l.quantity} × {l.title}
                 </span>
-                <span className="shrink-0 font-semibold">{formatTRY(l.price * l.quantity)}</span>
+                <span className="shrink-0 font-semibold">{format(l.price * l.quantity)}</span>
               </li>
             ))}
           </ul>
           <dl className="mt-5 space-y-2 border-t border-border pt-4 text-sm">
             <div className="flex justify-between">
               <dt className="text-muted-foreground">{t("cart.subtotal")}</dt>
-              <dd>{formatTRY(subtotal)}</dd>
+              <dd>{format(subtotal)}</dd>
             </div>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">{t("cart.shipping")}</dt>
-              <dd>{shipping === 0 ? t("cart.free") : formatTRY(shipping)}</dd>
+              <dd>{shipping === 0 ? t("cart.free") : format(shipping)}</dd>
             </div>
             <div className="flex justify-between border-t border-border pt-3 text-base font-bold">
               <dt>{t("cart.total")}</dt>
-              <dd>{formatTRY(subtotal + shipping)}</dd>
+              <dd>{format(subtotal + shipping)}</dd>
             </div>
           </dl>
         </aside>

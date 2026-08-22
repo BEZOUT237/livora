@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { SiteShell, EmptyState } from "@/components/livora/SiteShell";
 import { useCart } from "@/lib/cart";
-import { formatTRY } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import { PUBLIC_DEFAULTS, shippingFor } from "@/lib/catalog";
 import { useI18n } from "@/lib/i18n";
 
@@ -23,6 +23,7 @@ export const Route = createFileRoute("/cart")({
 function CartPage() {
   const { lines, subtotal, setQty, remove } = useCart();
   const { t } = useI18n();
+  const { format } = useCurrency();
   const shipping = shippingFor(subtotal);
   const remaining = PUBLIC_DEFAULTS.freeShippingThreshold - subtotal;
 
@@ -76,7 +77,7 @@ function CartPage() {
                       </button>
                     </div>
                   </div>
-                  <div className="text-right text-sm font-bold">{formatTRY(l.price * l.quantity)}</div>
+                  <div className="text-right text-sm font-bold">{format(l.price * l.quantity)}</div>
                 </li>
               ))}
             </ul>
@@ -84,21 +85,21 @@ function CartPage() {
             <aside className="h-fit rounded-lg border border-border bg-card p-6 shadow-panel">
               {remaining > 0 && (
                 <p className="mb-4 rounded-md bg-accent/12 px-3 py-2 text-xs font-semibold">
-                  {formatTRY(remaining)} {t("cart.freeShipHint")}
+                  {format(remaining)} {t("cart.freeShipHint")}
                 </p>
               )}
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">{t("cart.subtotal")}</dt>
-                  <dd>{formatTRY(subtotal)}</dd>
+                  <dd>{format(subtotal)}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">{t("cart.shipping")}</dt>
-                  <dd>{shipping === 0 ? t("cart.free") : formatTRY(shipping)}</dd>
+                  <dd>{shipping === 0 ? t("cart.free") : format(shipping)}</dd>
                 </div>
                 <div className="flex justify-between border-t border-border pt-3 text-base font-bold">
                   <dt>{t("cart.total")}</dt>
-                  <dd>{formatTRY(subtotal + shipping)}</dd>
+                  <dd>{format(subtotal + shipping)}</dd>
                 </div>
               </dl>
               <Link

@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { SiteShell } from "@/components/livora/SiteShell";
 import { BookRail } from "@/components/livora/BookRail";
 import { Partners } from "@/components/livora/Footer";
-import { fetchCollectionBooks, fetchHomepageSections, type BookRow } from "@/lib/catalog";
+import { DEFAULT_SITE_CONTENT, fetchCollectionBooks, fetchHomepageSections, fetchSiteContent, getSiteValue, type BookRow } from "@/lib/catalog";
 import { localized, useI18n } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import heroImage from "@/assets/hero-books.jpg";
@@ -34,6 +34,11 @@ export const Route = createFileRoute("/")({
 
 function Hero() {
   const { t } = useI18n();
+  const { data: siteContent } = useQuery({ queryKey: ["site-content"], queryFn: fetchSiteContent });
+  const heroEyebrow = getSiteValue(siteContent, "home_hero_eyebrow", "From Bolu to all of Türkiye");
+  const heroTitle = getSiteValue(siteContent, "home_hero_title", "English and French books, intelligently curated.");
+  const heroSubtitle = getSiteValue(siteContent, "home_hero_subtitle", "The world's most talked-about titles, with fast delivery and honest pricing.");
+
   return (
     <section className="relative overflow-hidden bg-ink text-ink-foreground">
       <img
@@ -46,9 +51,9 @@ function Hero() {
       <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/20" />
       <div className="container-livora relative grid gap-8 py-20 sm:py-28 lg:py-36">
         <div className="max-w-2xl">
-          <p className="eyebrow text-accent">{t("hero.eyebrow")}</p>
-          <h1 className="mt-4 font-serif text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">{t("hero.title")}</h1>
-          <p className="mt-5 max-w-lg text-base text-ink-foreground/75">{t("hero.subtitle")}</p>
+          <p className="eyebrow text-accent">{heroEyebrow || t("hero.eyebrow")}</p>
+          <h1 className="mt-4 font-serif text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">{heroTitle || t("hero.title")}</h1>
+          <p className="mt-5 max-w-lg text-base text-ink-foreground/75">{heroSubtitle || t("hero.subtitle")}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               to="/books"

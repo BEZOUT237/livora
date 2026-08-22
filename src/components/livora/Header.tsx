@@ -2,6 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Heart, Menu, Search, ShoppingBag, User, Compass, Home, X } from "lucide-react";
 import { useState } from "react";
 import { useI18n, LOCALES, type Locale } from "@/lib/i18n";
+import { useCurrency, type Currency } from "@/lib/currency";
 import { useCart } from "@/lib/cart";
 import { useRoles } from "@/lib/session";
 import { cn } from "@/lib/utils";
@@ -43,6 +44,28 @@ function LanguageSwitcher() {
   );
 }
 
+function CurrencySwitcher() {
+  const { currency, setCurrency } = useCurrency();
+
+  return (
+    <div className="flex items-center gap-1 rounded-full border border-ink-foreground/20 p-0.5">
+      {(["TRY", "USD", "EUR"] as const).map((code) => (
+        <button
+          key={code}
+          type="button"
+          onClick={() => setCurrency(code as Currency)}
+          className={cn(
+            "rounded-full px-2 py-1 text-[11px] font-bold uppercase transition-colors",
+            currency === code ? "bg-accent text-accent-foreground" : "text-ink-foreground/70 hover:text-ink-foreground",
+          )}
+        >
+          {code}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export function Header() {
   const { t } = useI18n();
   const { count } = useCart();
@@ -62,6 +85,7 @@ export function Header() {
     { to: "/books", label: t("nav.english"), search: { lang: "EN" } },
     { to: "/books", label: t("nav.french"), search: { lang: "FR" } },
     { to: "/about", label: t("nav.about") },
+    { to: "/contact", label: "Contact" },
   ];
 
   return (
@@ -108,8 +132,9 @@ export function Header() {
         </form>
 
         <div className="ml-auto flex items-center gap-3 md:ml-4">
-          <div className="hidden sm:block">
+          <div className="hidden sm:flex items-center gap-2">
             <LanguageSwitcher />
+            <CurrencySwitcher />
           </div>
           {isStaff && (
             <Link to="/admin" className="hidden rounded-full border border-accent/50 px-3 py-1 text-xs font-bold text-accent lg:block">
@@ -166,7 +191,10 @@ export function Header() {
                 </Link>
               )}
             </nav>
-            <LanguageSwitcher />
+            <div className="flex items-center gap-2">
+              <LanguageSwitcher />
+              <CurrencySwitcher />
+            </div>
           </div>
         </div>
       )}

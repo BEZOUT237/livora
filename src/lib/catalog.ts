@@ -113,6 +113,36 @@ export async function fetchSettings(): Promise<Record<string, string>> {
   return Object.fromEntries((data ?? []).map((s) => [s.key, s.value]));
 }
 
+export const DEFAULT_SITE_CONTENT: Record<string, string> = {
+  contact_email: "yemelink@gmail.com",
+  contact_phone: "+90 530 000 00 00",
+  contact_address: "Bolu, Türkiye",
+  footer_about:
+    "The smart international bookstore for Türkiye. Curated English & French titles, shipped from Bolu.",
+  home_hero_title: "English and French books, intelligently curated.",
+  home_hero_subtitle:
+    "The world's most talked-about titles, with fast delivery and honest pricing.",
+  home_hero_eyebrow: "From Bolu to all of Türkiye",
+  about_intro:
+    "LIVORA is an independent bookstore based in Bolu, specialised in new English and French titles.",
+  brand_name: "LIVORA",
+  brand_tagline: "INTERNATIONAL BOOKS",
+};
+
+export async function fetchSiteContent(): Promise<Record<string, string>> {
+  const { data, error } = await supabase
+    .from("settings")
+    .select("key,value")
+    .in("key", Object.keys(DEFAULT_SITE_CONTENT));
+  if (error) return DEFAULT_SITE_CONTENT;
+  const entries = Object.fromEntries((data ?? []).map((s) => [s.key, String(s.value ?? "")]));
+  return { ...DEFAULT_SITE_CONTENT, ...entries };
+}
+
+export function getSiteValue(settings: Record<string, string> | undefined, key: string, fallback: string) {
+  return settings?.[key] || fallback;
+}
+
 /** Public defaults; settings table is staff-only readable. */
 export const PUBLIC_DEFAULTS = {
   freeShippingThreshold: 750,

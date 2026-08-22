@@ -5,6 +5,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { LanguageProvider } from "@/lib/i18n";
+import { CurrencyProvider } from "@/lib/currency";
 import { CartProvider } from "@/lib/cart";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -84,10 +85,12 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
-        <CartProvider>
-          <Outlet />
-          <Toaster />
-        </CartProvider>
+        <CurrencyProvider>
+          <CartProvider>
+            <Outlet />
+            <Toaster />
+          </CartProvider>
+        </CurrencyProvider>
       </LanguageProvider>
     </QueryClientProvider>
   );

@@ -7,7 +7,8 @@ import { SiteShell } from "@/components/livora/SiteShell";
 import { StockBadge } from "@/components/livora/StockBadge";
 import { BookCard, WishlistButton } from "@/components/livora/BookCard";
 import { fetchBookBySlug, fetchBooks, PUBLIC_DEFAULTS } from "@/lib/catalog";
-import { formatDate, formatTRY } from "@/lib/format";
+import { formatDate } from "@/lib/format";
+import { useCurrency } from "@/lib/currency";
 import { useI18n } from "@/lib/i18n";
 import { useCart } from "@/lib/cart";
 import { useSession } from "@/lib/session";
@@ -65,6 +66,7 @@ function BookPage() {
   const { t } = useI18n();
   const cart = useCart();
   const { data: session } = useSession();
+  const { format } = useCurrency();
   const [qty, setQty] = useState(1);
 
   const available = Math.max(0, book.stock_qty - book.reserved_qty);
@@ -189,9 +191,9 @@ function BookPage() {
             </div>
 
             <div className="mt-6 flex items-baseline gap-3">
-              <span className="font-serif text-3xl">{formatTRY(book.price)}</span>
+              <span className="font-serif text-3xl">{format(book.price)}</span>
               {book.compare_at_price && Number(book.compare_at_price) > Number(book.price) && (
-                <span className="text-base text-muted-foreground line-through">{formatTRY(book.compare_at_price)}</span>
+                <span className="text-base text-muted-foreground line-through">{format(book.compare_at_price)}</span>
               )}
             </div>
 

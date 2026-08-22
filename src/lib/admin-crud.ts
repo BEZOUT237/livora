@@ -39,7 +39,10 @@ export type AdminTable =
   | "settings"
   | "user_roles"
   | "reviews"
-  | "inventory_movements";
+  | "inventory_movements"
+  | "analytics_events"
+  | "audit_logs"
+  | "profiles";
 
 export function useAdminList(table: AdminTable, select = "*", orderBy?: { column: string; ascending?: boolean }) {
   return useQuery({
